@@ -20,6 +20,7 @@ describe('config reducer', () => {
       janus: 'http://localhost:8080',
       publishers: 1,
       user: {
+        id: 1234,
         name: 'Test1'
       },
       room: {

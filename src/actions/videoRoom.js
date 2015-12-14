@@ -25,14 +25,14 @@ function isRoomExists(dispatch, getState, videoRoomLocal) {
         request: 'exists',
         room: room.room
       },
-      success: function(result) {
+      success: (result) => {
         if(result.exists === 'true') {
           resolve()   
         } else if(result.exists === 'false') {
           reject()   
         }
       },
-      error: function(error) {
+      error: (error) => {
         dispatch({
           type: ROOM_EXISTS_ERROR,
           message: error
@@ -80,7 +80,7 @@ export function publishLocalFeed(useAudio) {
         }
       },
       error: (error) => {
-        //Webrtc error
+        // Webrtc error
         if(useAudio) {
           dispatch(publishLocalFeed(false));
         } else {
@@ -104,7 +104,7 @@ function join(videoRoomLocal) {
     isRoomExists(dispatch, getState, videoRoomLocal)
     .then(joinToRoom)
     .catch(() => {
-      //Create room automatically
+      // Create room automatically
       if(room.request && room.request === 'create') {
         createRoom(dispatch, getState, videoRoomLocal)
         .then(joinToRoom)
@@ -142,13 +142,22 @@ function attachRemoteFeed(id, user) {
         if(event) {
           if(event === 'attached') {
             // Subscriber created and attached
+            // Don't rewrite with itself
+            if(feeds.filter(_feed => feed.user.id === _feed.user.id && !_feed.remote)[0]) {
+              return
+            }
+            // Remove the old feed
+            const oldFeed = feeds.filter(_feed => feed.user.id === _feed.user.id && _feed.remote)[0]
+            if(oldFeed) {
+              feeds.splice(feeds.indexOf(oldFeed), 1)
+            }
             feeds.push(feed)
             dispatch({
               type: ROOM_REMOTE_FEED,
               feed,
               feeds: feeds.slice(0)
             })
-            //Successfully attached
+            // Successfully attached
           } else {
             // What has just happened?
           }
@@ -164,7 +173,7 @@ function attachRemoteFeed(id, user) {
               feed.plugin.send({message: body, jsep: jsep})
             },
             error: (error) => {
-              //Webrtc error
+              // Webrtc error
               dispatch({
                 type: ROOM_REMOTE_FEED_ERROR,
                 message: error

@@ -20,6 +20,7 @@ const dummyFeed = {
   remote: true,
   stream: {},
   user: {
+    id: 1234,
     name: 'Test'
   }
 }

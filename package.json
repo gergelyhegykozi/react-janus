@@ -1,6 +1,6 @@
 {
   "name": "react-janus",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "React - Redux based wrapper for Janus ",
   "main": "lib/index.js",
   "jsnext:main": "src/index.js",

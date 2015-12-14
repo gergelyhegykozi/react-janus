@@ -34,6 +34,7 @@ export default class App extends Component {
         bitrate: 128000
       },
       user: {
+        id: new Date().getTime(),
         name: 'User' + new Date().getTime()
       },
       publishers: 6,
@@ -55,8 +56,8 @@ export default class App extends Component {
         position: 'fixed',
         top: 0,
         right: 0,
-        bottom: '72px',
-        width: '320px'
+        bottom: 72,
+        width: 320
       },
       toolbar: {
         backgroundColor: Colors.teal500,
