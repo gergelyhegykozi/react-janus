@@ -296,7 +296,7 @@ export function attachLocalFeed(janus) {
         const { pc } = feed.plugin.webrtcStuff
         if(pc) {
           pc.oniceconnectionstatechange = function () {
-            if (pc.iceConnectionState === 'disconnected') {
+            if (pc.iceConnectionState === 'disconnected' || pc.iceConnectionState === 'failed') {
               dispatch({
                 type: ROOM_ICE_ERROR,
                 message: pc.iceConnectionState
