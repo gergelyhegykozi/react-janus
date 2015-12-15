@@ -5,6 +5,7 @@ import {
   createSession
 } from '../actions/mcu'
 import {
+  ROOM_ICE_ERROR,
   attachLocalFeed,
   publishLocalFeed,
   reset
@@ -30,12 +31,16 @@ class VideoRoom extends Component {
     }
     //Retry
     if(nextProps.error !== this.props.error) {
-      if(nextProps.error.type === CREATE_SESSION_ERROR) {
-        try {
-          this.props.janusInstance.destroy()
-        } catch(o) {}
-        reset()
-        setTimeout(this.initMcu.bind(this), this.props.retry.countdown)
+      if(
+        nextProps.error.type === CREATE_SESSION_ERROR ||
+        nextProps.error.type === ROOM_ICE_ERROR
+      ) {
+        this.props.janusInstance.destroy({
+          success: () => {
+            reset()
+            setTimeout(this.initMcu.bind(this), this.props.retry.countdown)
+          }.bind(this)
+        })
       }
     }
   }
@@ -76,17 +81,20 @@ VideoRoom.propTypes = {
   user: PropTypes.object.isRequired,
   janus: PropTypes.object.isRequired,
   publishers: PropTypes.number.isRequired,
-  retry: PropTypes.object
+  retry: PropTypes.object,
+  janusInstance: PropTypes.object,
+  addefFeed: PropTypes.object,
+  error: PropTypes.object
 }
 
 function selector(state) {
   const {
-    janus: janusInstance,
-    error
+    janus: janusInstance
   } = state.mcu
   const {
     addedFeed
   } = state.videoRoom
+  const error = state.mcu.error || state.videoRoom.error || null
   return Object.assign({
     janusInstance,
     addedFeed,

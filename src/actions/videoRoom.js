@@ -10,6 +10,7 @@ export const ROOM_REMOTE_FEED_ERROR = 'ROOM_REMOTE_FEED_ERROR'
 export const ROOM_REMOTE_STREAM = 'ROOM_REMOTE_STREAM'
 export const ROOM_REMOVE_FEED = 'ROOM_REMOVE_FEED'
 export const ROOM_DESTROYED = 'ROOM_DESTROYED'
+export const ROOM_ICE_ERROR = 'ROOM_ICE_ERROR'
 
 let feeds = []
 
@@ -291,6 +292,18 @@ export function attachLocalFeed(janus) {
           feed,
           feeds: feeds.slice(0)
         })
+        //Ice state checker
+        const { pc } = feed.plugin.webrtcStuff
+        if(pc) {
+          pc.oniceconnectionstatechange = function () {
+            if (pc.iceConnectionState === 'disconnected') {
+              dispatch({
+                type: ROOM_ICE_ERROR,
+                message: pc.iceConnectionState
+              })
+            }
+          }
+        }
       },
       onremotestream: (stream) => {
         //The publisher stream is sendonly, we don't expect anything here

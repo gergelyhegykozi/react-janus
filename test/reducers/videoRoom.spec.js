@@ -10,7 +10,8 @@ import {
   ROOM_EXISTS_ERROR,
   CREATE_ROOM_ERROR,
   ROOM_LOCAL_FEED_ERROR,
-  ROOM_REMOTE_FEED_ERROR
+  ROOM_REMOTE_FEED_ERROR,
+  ROOM_ICE_ERROR
 } from '../../src/actions/videoRoom'
 import { videoRoom } from '../../src/reducers/videoRoom'
 
@@ -125,4 +126,5 @@ describe('videoRoom reducer', () => {
   testError(CREATE_ROOM_ERROR)
   testError(ROOM_LOCAL_FEED_ERROR)
   testError(ROOM_REMOTE_FEED_ERROR)
+  testError(ROOM_ICE_ERROR)
 })

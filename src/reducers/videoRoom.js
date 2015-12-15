@@ -9,7 +9,8 @@ import {
   ROOM_EXISTS_ERROR,
   CREATE_ROOM_ERROR,
   ROOM_LOCAL_FEED_ERROR,
-  ROOM_REMOTE_FEED_ERROR
+  ROOM_REMOTE_FEED_ERROR,
+  ROOM_ICE_ERROR
 } from '../actions/videoRoom'
 
 function videoRoom(state = {
@@ -45,6 +46,7 @@ function videoRoom(state = {
     case CREATE_ROOM_ERROR:
     case ROOM_LOCAL_FEED_ERROR:
     case ROOM_REMOTE_FEED_ERROR:
+    case ROOM_ICE_ERROR:
       return Object.assign({}, state, {
         error: action
       })
