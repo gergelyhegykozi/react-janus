@@ -52,14 +52,16 @@ class VideoRoom extends Component {
       user,
       janus,
       publishers,
-      retry
+      retry,
+      debug
     } = this.props
     dispatch(createSession({
       room,
       user,
       janus,
       publishers,
-      retry
+      retry,
+      debug
     }))
   }
 
@@ -84,7 +86,8 @@ VideoRoom.propTypes = {
   retry: PropTypes.object,
   janusInstance: PropTypes.object,
   addefFeed: PropTypes.object,
-  error: PropTypes.object
+  error: PropTypes.object,
+  debug: PropTypes.bool
 }
 
 function selector(state) {

@@ -256,9 +256,9 @@ export function attachLocalFeed(janus) {
             // Any new feed to attach to?
             if(msg.publishers) {
               addRemoteFeed(msg.publishers)
-            } else if(msg.leaving) {
+            } else if(msg.leaving || msg.unpublished) {
               // One of the publishers has gone away?
-              let leaving = msg.leaving,
+              let leaving = msg.leaving || msg.unpublished,
                   removeFeed = feeds.filter(feed => feed.id == leaving)
 
               //Remove feed
@@ -272,9 +272,6 @@ export function attachLocalFeed(janus) {
                   feeds: feeds.slice(0)
                 })
               }
-            } else if(msg.unpublished) {
-              // One of the publishers has unpublished?
-
             } else if(msg.error) {
               //Some other error
             }
