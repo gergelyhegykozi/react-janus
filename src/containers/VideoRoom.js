@@ -35,14 +35,20 @@ class VideoRoom extends Component {
         nextProps.error.type === CREATE_SESSION_ERROR ||
         nextProps.error.type === ROOM_ICE_ERROR
       ) {
-        this.props.janusInstance.destroy({
-          success: () => {
-            reset()
-            setTimeout(this.initMcu.bind(this), this.props.retry.countdown)
-          }.bind(this)
-        })
+        if(nextProps.janusInstance) {
+          nextProps.janusInstance.destroy({
+            success: this.retry.bind(this)
+          })
+        } else {
+          this.retry()
+        }
       }
     }
+  }
+
+  retry() {
+    reset()
+    setTimeout(this.initMcu.bind(this), this.props.retry.countdown)
   }
 
   initMcu() {
