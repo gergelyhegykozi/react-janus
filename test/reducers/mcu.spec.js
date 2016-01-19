@@ -4,7 +4,7 @@ import {
   CREATE_SESSION_SUCCESS,
   CREATE_SESSION_ERROR
 } from '../../src/actions/mcu'
-import { config, mcu } from '../../src/reducers/mcu'
+import { janusConfig, mcu } from '../../src/reducers/mcu'
 
 function dummyFunction() {}
 let dummyInstance = new dummyFunction()
@@ -12,7 +12,7 @@ let dummyInstance = new dummyFunction()
 describe('config reducer', () => {
   it('should handle initial state', () => {
     expect(
-      config(undefined, {})
+      janusConfig(undefined, {})
     ).toEqual({})
   })
   it('should handle CREATE_SESSION', () => {
@@ -34,7 +34,7 @@ describe('config reducer', () => {
       }
     }
     expect(
-      config({}, {
+      janusConfig({}, {
         type: CREATE_SESSION,
         config: config1
       })

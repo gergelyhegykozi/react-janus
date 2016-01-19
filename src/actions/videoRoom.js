@@ -19,7 +19,7 @@ export function reset() {
 }
 
 function isRoomExists(dispatch, getState, videoRoomLocal) {
-  const { room } = getState().config
+  const { room } = getState().janusConfig
   return new Promise((resolve, reject) => {
     videoRoomLocal.send({
       message: {
@@ -44,7 +44,7 @@ function isRoomExists(dispatch, getState, videoRoomLocal) {
 }
 
 function createRoom(dispatch, getState, videoRoomLocal) {
-  const { room, publishers } = getState().config
+  const { room, publishers } = getState().janusConfig
   return new Promise((resolve, reject) => {
     videoRoomLocal.send({
       message: Object.assign(room, {
@@ -98,7 +98,7 @@ export function publishLocalFeed(audio, video) {
 
 function join(videoRoomLocal) {
   return (dispatch, getState) => {
-    const { room, user } = getState().config
+    const { room, user } = getState().janusConfig
     const joinToRoom = () => {
       const data = { request: 'join', room: room.room, ptype: 'publisher', display: JSON.stringify(user) }
       videoRoomLocal.send({message: data})
@@ -118,7 +118,7 @@ function join(videoRoomLocal) {
 // A new feed has been published, create a new plugin handle and attach to it as a listener
 function attachRemoteFeed(id, user) {
   return (dispatch, getState) => {
-    const { room, publishers } = getState().config
+    const { room, publishers } = getState().janusConfig
     const { janus } = getState().mcu
     let feed = {
       id,
@@ -203,7 +203,7 @@ function attachRemoteFeed(id, user) {
 
 export function attachLocalFeed(janus) {
   return (dispatch, getState) => {
-    const { publishers, user } = getState().config
+    const { publishers, user } = getState().janusConfig
     const { janus } = getState().mcu
     const addRemoteFeed = (publishers) => {
       let list = publishers

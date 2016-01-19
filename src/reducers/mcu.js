@@ -4,7 +4,7 @@ import {
   CREATE_SESSION_ERROR
 } from '../actions/mcu'
 
-function config(state = {}, action) {
+function janusConfig(state = {}, action) {
   switch(action.type) {
     case CREATE_SESSION:
       const { config } = action
@@ -33,6 +33,6 @@ function mcu(state = {}, action) {
 }
 
 export default {
-  config,
+  janusConfig,
   mcu
 }

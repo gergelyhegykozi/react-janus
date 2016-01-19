@@ -111,7 +111,7 @@ function selector(state) {
       countdown: 5000
     },
     error
-  }, state.config)
+  }, state.janusConfig)
 }
 
 export default connect(selector)(VideoRoom)
