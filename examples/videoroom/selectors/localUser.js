@@ -2,7 +2,10 @@ import { createSelector } from 'reselect'
 
 const feedsSelector = state => state.videoRoom.feeds
 const connectedSelector = state => state.mcu.connected
-const streamFeedSelector = state => state.videoRoom.streamFeed
+const streamSelector = state => {
+  const { streamFeed } = state.videoRoom
+  return streamFeed && !streamFeed.remote ? streamFeed.stream : null
+}
 
 function getFeed(feeds) {
   let result = feeds.filter(feed => !feed.remote)
@@ -12,7 +15,7 @@ function getFeed(feeds) {
 export default createSelector(
   feedsSelector,
   connectedSelector,
-  streamFeedSelector,
+  streamSelector,
   (feeds, connected) => {
     const feed = getFeed(feeds)
     const videoRoomLocal = feed ? feed.plugin : null

@@ -37,7 +37,7 @@ class RemoteUser extends Component {
 
   shouldComponentUpdate(nextProps) {
     const { feed, streamFeed } = nextProps 
-    return streamFeed === feed
+    return streamFeed.user.id === feed.user.id
   }
 
   componentDidUpdate() {
@@ -75,7 +75,8 @@ class RemoteUser extends Component {
 }
 
 RemoteUser.propTypes = {
-  feed: PropTypes.object.isRequired
+  feed: PropTypes.object.isRequired,
+  streamFeed: PropTypes.object
 }
 
 export default connect(selector)(RemoteUser)

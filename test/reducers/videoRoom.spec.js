@@ -80,24 +80,20 @@ describe('videoRoom reducer', () => {
     expect(
       videoRoom({}, {
         type: ROOM_LOCAL_STREAM,
-        feed: dummyFeed,
-        feeds: dummyFeeds
+        feed: dummyFeed
       })
     ).toEqual({
-      streamFeed: dummyFeed,
-      feeds: dummyFeeds
+      streamFeed: dummyFeed
     })
   })
   it('should handle ROOM_REMOTE_STREAM', () => {
     expect(
       videoRoom({}, {
         type: ROOM_REMOTE_STREAM,
-        feed: dummyFeed,
-        feeds: dummyFeeds
+        feed: dummyFeed
       })
     ).toEqual({
-      streamFeed: dummyFeed,
-      feeds: dummyFeeds
+      streamFeed: dummyFeed
     })
   })
   it('should handle ROOM_REMOVE_FEED', () => {

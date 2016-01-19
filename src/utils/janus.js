@@ -1168,6 +1168,12 @@ function Janus(gatewayCallbacks) {
 			var constraints = { mandatory: {}, optional: []};
 			pluginHandle.consentDialog(true);
 			var videoSupport = isVideoSendEnabled(media);
+			var audioSupport = isAudioSendEnabled(media);
+			if(audioSupport === true && media != undefined && media != null) {
+                if(typeof media.audio === 'object') {
+                    audioSupport = media.audio;
+                }
+            }
 			if(videoSupport === true && media != undefined && media != null) {
 				if(media.video && media.video != 'screen') {
 					var width = 0;
@@ -1241,6 +1247,9 @@ function Janus(gatewayCallbacks) {
 						    'optional': []
 						};
 					}
+                    if(typeof media.video === 'object') {
+                        videoSupport = media.video;
+                    }
 					Janus.debug(videoSupport);
 				} else if(media.video === 'screen') {
 					// Not a webcam, but screen capture
@@ -1404,7 +1413,10 @@ function Janus(gatewayCallbacks) {
 					}
 
 					getUserMedia(
-						{audio: audioExist && isAudioSendEnabled(media), video: videoExist ? videoSupport : false},
+						{
+                            audio: audioExist ? audioSupport : false,
+                            video: videoExist ? videoSupport : false
+                        },
 						function(stream) { pluginHandle.consentDialog(false); streamsDone(handleId, jsep, media, callbacks, stream); },
 						function(error) { pluginHandle.consentDialog(false); callbacks.error(error); });
 				});

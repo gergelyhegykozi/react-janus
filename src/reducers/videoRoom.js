@@ -3,6 +3,7 @@ import {
   ROOM_LOCAL_STREAM,
   ROOM_REMOTE_FEED,
   ROOM_REMOTE_STREAM,
+  ROOM_UPDATE_STREAM,
   ROOM_REMOVE_FEED,
   AUDIO_DISABLED,
   ATTACH_MCU_ERROR,
@@ -26,10 +27,9 @@ function videoRoom(state = {
       })
     case ROOM_LOCAL_STREAM:
     case ROOM_REMOTE_STREAM:
-      var { feed, feeds } = action
+      var { feed } = action
       return Object.assign({}, state, {
-        streamFeed: feed,
-        feeds
+        streamFeed: feed
       })
     case ROOM_REMOVE_FEED:
       var { feed, feeds } = action

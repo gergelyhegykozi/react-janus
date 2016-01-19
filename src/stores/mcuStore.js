@@ -3,7 +3,7 @@ import thunkMiddleware from 'redux-thunk'
 import mcuReducer from '../reducers/mcu'
 import videoRoomReducer from '../reducers/videoRoom'
 
-export default function configureStore(reducers = [], middlewares = []) {
+export default function mcuStore(reducers = [], middlewares = []) {
   const createStoreWithMiddleware = applyMiddleware(
     thunkMiddleware,
     ...middlewares

@@ -64,17 +64,18 @@ function createRoom(dispatch, getState, videoRoomLocal) {
 }
 
 // Publisher/manager created, negotiate WebRTC and attach to existing feeds, if any
-export function publishLocalFeed(useAudio) {
+export function publishLocalFeed(audio, video) {
   return (dispatch, getState) => {
     const { feeds } = getState().videoRoom
     const videoRoomLocal = feeds.filter(feed => !feed.remote)[0].plugin
     // Publish our stream
     videoRoomLocal.createOffer({
-      media: { audioRecv: false, videoRecv: false, audioSend: useAudio, videoSend: true },	// Publishers are sendonly
+      media: { audioRecv: false, videoRecv: false, audioSend: !!audio, videoSend: !!video, audio: audio, video: video },	// Publishers are sendonly
+      forced: true,
       success: (jsep) => {
-        const publish = { request: 'configure', audio: useAudio, video: true }
+        const publish = { request: 'configure', audio: !!audio, video: !!video }
         videoRoomLocal.send({message: publish, jsep: jsep})
-        if(!useAudio) {
+        if(!audio) {
           dispatch({
             type: AUDIO_DISABLED
           })
@@ -82,8 +83,8 @@ export function publishLocalFeed(useAudio) {
       },
       error: (error) => {
         // Webrtc error
-        if(useAudio) {
-          dispatch(publishLocalFeed(false));
+        if(audio) {
+          dispatch(publishLocalFeed(false, video));
         } else {
           dispatch({
             type: ROOM_LOCAL_FEED_ERROR,
@@ -144,20 +145,15 @@ function attachRemoteFeed(id, user) {
           if(event === 'attached') {
             // Subscriber created and attached
             // Don't rewrite with itself
-            if(feeds.filter(_feed => feed.user.id === _feed.user.id && !_feed.remote)[0]) {
-              return
+            const existedFeed = feeds.filter(_feed => feed.user.id === _feed.user.id)[0]
+            if(!existedFeed) {
+              feeds.push(feed)
+              dispatch({
+                type: ROOM_REMOTE_FEED,
+                feed,
+                feeds: feeds.slice(0)
+              })
             }
-            // Remove the old feed
-            const oldFeed = feeds.filter(_feed => feed.user.id === _feed.user.id && _feed.remote)[0]
-            if(oldFeed) {
-              feeds.splice(feeds.indexOf(oldFeed), 1)
-            }
-            feeds.push(feed)
-            dispatch({
-              type: ROOM_REMOTE_FEED,
-              feed,
-              feeds: feeds.slice(0)
-            })
             // Successfully attached
           } else {
             // What has just happened?
@@ -187,11 +183,16 @@ function attachRemoteFeed(id, user) {
         // The subscriber stream is recvonly, we don't expect anything here
       },
       onremotestream: function(stream) {
-        feed.stream = stream
-        dispatch({
-          type: ROOM_REMOTE_STREAM,
-          feed,
-          feeds: feeds.slice(0)
+        // Use the existed feed
+        feeds.forEach((_feed, i) => {
+          if(_feed.id === feed.id) {
+            _feed.stream = stream
+            dispatch({
+              type: ROOM_REMOTE_STREAM,
+              feed: _feed,
+              feeds
+            })
+          }
         })
       },
       oncleanup: function() {
@@ -241,7 +242,6 @@ export function attachLocalFeed(janus) {
             }
             feed.id = id
             feeds.push(feed)
-
             dispatch({
               type: ROOM_LOCAL_FEED,
               feed,
@@ -256,9 +256,9 @@ export function attachLocalFeed(janus) {
             // Any new feed to attach to?
             if(msg.publishers) {
               addRemoteFeed(msg.publishers)
-            } else if(msg.leaving || msg.unpublished) {
+            } else if(msg.leaving) {
               // One of the publishers has gone away?
-              let leaving = msg.leaving || msg.unpublished,
+              let leaving = msg.leaving,
                   removeFeed = feeds.filter(feed => feed.id == leaving)
 
               //Remove feed
@@ -287,7 +287,7 @@ export function attachLocalFeed(janus) {
         dispatch({
           type: ROOM_LOCAL_STREAM,
           feed,
-          feeds: feeds.slice(0)
+          feeds
         })
         //Ice state checker
         const { pc } = feed.plugin.webrtcStuff

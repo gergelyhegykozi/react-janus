@@ -26,7 +26,7 @@ class VideoRoom extends Component {
     if(nextProps.addedFeed !== this.props.addedFeed) {
       //Publish local feed
       if(!nextProps.addedFeed.remote) {
-        dispatch(publishLocalFeed(true))
+        dispatch(publishLocalFeed(true, true))
       }
     }
     //Retry
