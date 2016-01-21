@@ -27,9 +27,10 @@ function videoRoom(state = {
       })
     case ROOM_LOCAL_STREAM:
     case ROOM_REMOTE_STREAM:
-      var { feed } = action
+      var { feed, feeds } = action
       return Object.assign({}, state, {
-        streamFeed: feed
+        streamFeed: feed,
+        feeds
       })
     case ROOM_REMOVE_FEED:
       var { feed, feeds } = action

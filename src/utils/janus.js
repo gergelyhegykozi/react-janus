@@ -1274,15 +1274,14 @@ function Janus(gatewayCallbacks) {
 					function getScreenMedia(constraints, gsmCallback) {
 						Janus.log("Adding media constraint (screen capture)");
 						Janus.debug(constraints);
-						getUserMedia(constraints,
-							function(stream) {
-								gsmCallback(null, stream);
-							},
-							function(error) {
-								pluginHandle.consentDialog(false);
-								gsmCallback(error);
-							}
-						);
+						navigator.mediaDevices.getUserMedia(constraints)
+                        .then(function(stream) {
+                            gsmCallback(null, stream);
+                        })
+						.catch(function(error) {
+                            pluginHandle.consentDialog(false);
+                            gsmCallback(error);
+                        });
 					};
 					if(window.navigator.userAgent.match('Chrome')) {
 						var chromever = parseInt(window.navigator.userAgent.match(/Chrome\/(.*) /)[1], 10);
@@ -1395,15 +1394,14 @@ function Janus(gatewayCallbacks) {
 			}
 			// If we got here, we're not screensharing
 			if(media === null || media === undefined || media.video !== 'screen') {
-				// Check whether all media sources are actually available or not
-				// as per https://github.com/meetecho/janus-gateway/pull/114
-				MediaStreamTrack.getSources(function(sources) {
-					var audioExist = sources.some(function(source) {
-						return source.kind === 'audio';
+				navigator.mediaDevices.enumerateDevices().then(function(devices) {
+					var audioExist = devices.some(function(device) {
+						return device.kind === 'audioinput';
 					}),
-					videoExist = sources.some(function(source) {
-						return source.kind === 'video';
+					videoExist = devices.some(function(device) {
+						return device.kind === 'videoinput';
 					});
+
 
 					// FIXME Should we really give up, or just assume recvonly for both?
 					if(!audioExist && !videoExist) {
@@ -1412,14 +1410,17 @@ function Janus(gatewayCallbacks) {
 						return false;
 					}
 
-					getUserMedia(
-						{
-                            audio: audioExist ? audioSupport : false,
-                            video: videoExist ? videoSupport : false
-                        },
-						function(stream) { pluginHandle.consentDialog(false); streamsDone(handleId, jsep, media, callbacks, stream); },
-						function(error) { pluginHandle.consentDialog(false); callbacks.error(error); });
-				});
+					navigator.mediaDevices.getUserMedia({
+                        audio: audioExist ? audioSupport : false,
+                        video: videoExist ? videoSupport : false
+                    })
+                    .then(function(stream) { pluginHandle.consentDialog(false); streamsDone(handleId, jsep, media, callbacks, stream); })
+				    .catch(function(error) { pluginHandle.consentDialog(false); callbacks.error(error); });
+				})
+                .catch(function(error) {
+                    pluginHandle.consentDialog(false);
+                    callbacks.error('enumerateDevices error', error);
+                });
 
 			}
 		} else {
@@ -1428,7 +1429,7 @@ function Janus(gatewayCallbacks) {
 		}
 	}
 
-	function prepareWebrtcPeer(handleId, callbacks) {
+ 	function prepareWebrtcPeer(handleId, callbacks) {
 		callbacks = callbacks || {};
 		callbacks.success = (typeof callbacks.success == "function") ? callbacks.success : noop;
 		callbacks.error = (typeof callbacks.error == "function") ? callbacks.error : webrtcError;

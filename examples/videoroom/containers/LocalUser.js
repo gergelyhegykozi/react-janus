@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import ReactDOM from 'react-dom'
 import { connect } from 'react-redux'
-import { videoRoomActions } from 'react-janus'
 
 //Material
 import {
@@ -56,10 +55,10 @@ class LocalUser extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { stream } = this.props
-    if(stream) {
+    const { feed } = this.props
+    if(feed && feed.stream) {
       const video = ReactDOM.findDOMNode(this).querySelector('video')
-      attachMediaStream(video, stream)
+      attachMediaStream(video, feed.stream)
       video.muted = 'muted'
     }
   }
@@ -101,8 +100,7 @@ class LocalUser extends Component {
 
 LocalUser.propTypes = {
   videoRoomLocal: PropTypes.object,
-  feed: PropTypes.object,
-  stream: PropTypes.object
+  feed: PropTypes.object
 }
 
 export default connect(selector)(LocalUser)

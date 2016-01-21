@@ -186,11 +186,14 @@ function attachRemoteFeed(id, user) {
         // Use the existed feed
         feeds.forEach((_feed, i) => {
           if(_feed.id === feed.id) {
-            _feed.stream = stream
+            feed = Object.assign({}, feed, {
+                stream
+            })
+            feeds[i] = feed;
             dispatch({
               type: ROOM_REMOTE_STREAM,
-              feed: _feed,
-              feeds
+              feed,
+              feeds: feeds.slice(0)
             })
           }
         })
@@ -283,11 +286,15 @@ export function attachLocalFeed(janus) {
       },
       onlocalstream: (stream) => {
         //Local video / audio
-        feed.stream = stream
+        const index = feeds.indexOf(feed);
+        feed = Object.assign({}, feed, {
+            stream
+        })
+        feeds[index] = feed;
         dispatch({
           type: ROOM_LOCAL_STREAM,
           feed,
-          feeds
+          feeds: feeds.slice(0)
         })
         //Ice state checker
         const { pc } = feed.plugin.webrtcStuff
