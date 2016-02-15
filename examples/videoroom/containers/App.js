@@ -87,7 +87,8 @@ export default class App extends Component {
          janus={this.state.janus}
          publishers={this.state.publishers}
          user={this.state.user}
-         room={this.state.room}>
+         room={this.state.room}
+         autoPublish={true}>
 
          <Paper style={styles.users} zDepth={1} rounded={false}>
           <Tabs>

@@ -25,7 +25,7 @@ class VideoRoom extends Component {
     //Join to the room
     if(nextProps.addedFeed !== this.props.addedFeed) {
       //Publish local feed
-      if(!nextProps.addedFeed.remote) {
+      if(!nextProps.addedFeed.remote && !!nextProps.autoPublish) {
         dispatch(publishLocalFeed(true, true))
       }
     }
@@ -93,7 +93,8 @@ VideoRoom.propTypes = {
   janusInstance: PropTypes.object,
   addefFeed: PropTypes.object,
   error: PropTypes.object,
-  debug: PropTypes.bool
+  debug: PropTypes.bool,
+  autoPublish: PropTypes.bool
 }
 
 function selector(state) {
