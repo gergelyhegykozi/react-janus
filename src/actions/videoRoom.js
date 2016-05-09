@@ -50,10 +50,10 @@ function createRoom(dispatch, getState, videoRoomLocal) {
       message: Object.assign(room, {
         publishers
       }),
-      success: function(result) {
+      success: () => {
         resolve();   
       },
-      error: function(error) {
+      error: (error) => {
         dispatch({
           type: CREATE_ROOM_ERROR,
           message: error
@@ -66,32 +66,44 @@ function createRoom(dispatch, getState, videoRoomLocal) {
 // Publisher/manager created, negotiate WebRTC and attach to existing feeds, if any
 export function publishLocalFeed(audio, video) {
   return (dispatch, getState) => {
-    const { feeds } = getState().videoRoom
+    const {feeds} = getState().videoRoom
     const videoRoomLocal = feeds.filter(feed => !feed.remote)[0].plugin
     // Publish our stream
-    videoRoomLocal.createOffer({
-      media: { audioRecv: false, videoRecv: false, audioSend: !!audio, videoSend: !!video, audio: audio, video: video },	// Publishers are sendonly
-      forced: true,
-      success: (jsep) => {
-        const publish = { request: 'configure', audio: !!audio, video: !!video }
-        videoRoomLocal.send({message: publish, jsep: jsep})
-        if(!audio) {
-          dispatch({
-            type: AUDIO_DISABLED
+    return new Promise((resolve, reject) => {
+      videoRoomLocal.createOffer({
+        media: {audioRecv: false, videoRecv: false, audioSend: !!audio, videoSend: !!video, audio: audio, video: video},	// Publishers are sendonly
+        forced: true,
+        success: (jsep) => {
+          const publish = {request: 'configure', audio: !!audio, video: !!video}
+          videoRoomLocal.send({
+            message: publish,
+            jsep: jsep,
+            success: () => {
+              resolve()
+            },
+            error: (error) => {
+              reject(error)
+            }
           })
+          if (!audio) {
+            dispatch({
+              type: AUDIO_DISABLED
+            })
+          }
+        },
+        error: (error) => {
+          // Webrtc error
+          if (audio) {
+            dispatch(publishLocalFeed(false, video));
+          } else {
+            reject(error)
+            dispatch({
+              type: ROOM_LOCAL_FEED_ERROR,
+              message: error
+            })
+          }
         }
-      },
-      error: (error) => {
-        // Webrtc error
-        if(audio) {
-          dispatch(publishLocalFeed(false, video));
-        } else {
-          dispatch({
-            type: ROOM_LOCAL_FEED_ERROR,
-            message: error
-          })
-        }
-      }
+      })
     })
   }
 }
@@ -179,10 +191,10 @@ function attachRemoteFeed(id, user) {
           })
         }
       },
-      onlocalstream: function(stream) {
+      onlocalstream: (stream) => {
         // The subscriber stream is recvonly, we don't expect anything here
       },
-      onremotestream: function(stream) {
+      onremotestream: (stream) => {
         // Use the existed feed
         feeds.forEach((_feed, i) => {
           if(_feed.id === feed.id) {
@@ -198,7 +210,7 @@ function attachRemoteFeed(id, user) {
           }
         })
       },
-      oncleanup: function() {
+      oncleanup: () => {
       }
     });
   }
@@ -299,7 +311,7 @@ export function attachLocalFeed(janus) {
         //Ice state checker
         const { pc } = feed.plugin.webrtcStuff
         if(pc) {
-          pc.oniceconnectionstatechange = function () {
+          pc.oniceconnectionstatechange = () => {
             if (pc.iceConnectionState === 'disconnected' || pc.iceConnectionState === 'failed') {
               dispatch({
                 type: ROOM_ICE_ERROR,
