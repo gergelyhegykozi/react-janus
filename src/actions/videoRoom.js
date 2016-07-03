@@ -14,7 +14,7 @@ export const ROOM_ICE_ERROR = 'ROOM_ICE_ERROR'
 export const ROOM_LOCAL_DATA = 'ROOM_LOCAL_DATA'
 export const ROOM_LOCAL_DATA_ERROR = 'ROOM_LOCAL_DATA_ERROR'
 export const ROOM_REMOTE_DATA = 'ROOM_REMOTE_DATA'
-export const ROOM_REMOTE_DATA_OPEN = 'ROOM_REMOTE_DATA_OPEN'
+export const ROOM_DATA_OPEN = 'ROOM_DATA_OPEN'
 
 let feeds = []
 let dataSupport = false
@@ -230,11 +230,6 @@ function attachRemoteFeed(id, user) {
           })
         }
       },
-      ondataopen: () => {
-        dispatch({
-          type: ROOM_REMOTE_DATA_OPEN
-        })
-      },
       ondata: (data) => {
         dispatch({
           type: ROOM_REMOTE_DATA,
@@ -295,6 +290,11 @@ export function attachLocalFeed(janus) {
         })
       },
       consentDialog: (on) => {
+      },
+      ondataopen: () => {
+        dispatch({
+          type: ROOM_DATA_OPEN
+        })
       },
       onmessage: (msg, jsep) => {
         let event = msg.videoroom;
