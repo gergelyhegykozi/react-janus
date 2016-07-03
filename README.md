@@ -21,6 +21,7 @@ npm install react-janus --save
 | retry | Retry | `{ countdown: 5000 }` | Reconnection config |
 | autoPublish | boolean | false | Publish the current stream after the initialization |
 | debug | boolean | false | Debug janus |
+| dataSupport | boolean | false | Data channel support |
 # Actions
 ## videoRoomActions
 #### publishLocalFeed(audio[boolean | audioConstraint], video[boolean | videoConstraint])
@@ -37,5 +38,10 @@ npm install react-janus --save
 #### ROOM_REMOVE_FEED
 #### ROOM_DESTROYED
 #### ROOM_ICE_ERROR
+#### ROOM_LOCAL_DATA
+#### ROOM_LOCAL_DATA_ERROR
+#### ROOM_REMOTE_DATA
+#### ROOM_REMOTE_DATA_OPEN
+
 # Reducers
 ## janusReducers

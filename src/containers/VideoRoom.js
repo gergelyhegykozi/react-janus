@@ -8,13 +8,11 @@ import {
   ROOM_ICE_ERROR,
   attachLocalFeed,
   publishLocalFeed,
-  reset
+  reset,
+  setDataSupport
 } from '../actions/videoRoom'
 
 class VideoRoom extends Component {
-  constructor(props) {
-    super(props)
-  }
 
   componentWillReceiveProps(nextProps) {
     const { dispatch } = nextProps
@@ -28,6 +26,10 @@ class VideoRoom extends Component {
       if(!nextProps.addedFeed.remote && !!nextProps.autoPublish) {
         dispatch(publishLocalFeed(true, true))
       }
+    }
+    //Change dataSupport
+    if(nextProps.dataSupport !== this.props.dataSupport) {
+      setDataSupport(nextProps.dataSupport)
     }
     //Retry
     if(nextProps.error !== this.props.error) {
@@ -72,7 +74,13 @@ class VideoRoom extends Component {
   }
 
   componentDidMount() {
+    setDataSupport(this.props.dataSupport)
+    reset()
     this.initMcu()
+  }
+
+  componentWillUnmount() {
+    this.props.janusInstance.destroy();
   }
 
   render() {
@@ -94,7 +102,8 @@ VideoRoom.propTypes = {
   addefFeed: PropTypes.object,
   error: PropTypes.object,
   debug: PropTypes.bool,
-  autoPublish: PropTypes.bool
+  autoPublish: PropTypes.bool,
+  dataSupport: PropTypes.bool
 }
 
 function selector(state) {

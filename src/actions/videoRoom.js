@@ -11,8 +11,17 @@ export const ROOM_REMOTE_STREAM = 'ROOM_REMOTE_STREAM'
 export const ROOM_REMOVE_FEED = 'ROOM_REMOVE_FEED'
 export const ROOM_DESTROYED = 'ROOM_DESTROYED'
 export const ROOM_ICE_ERROR = 'ROOM_ICE_ERROR'
+export const ROOM_LOCAL_DATA = 'ROOM_LOCAL_DATA'
+export const ROOM_LOCAL_DATA_ERROR = 'ROOM_LOCAL_DATA_ERROR'
+export const ROOM_REMOTE_DATA = 'ROOM_REMOTE_DATA'
+export const ROOM_REMOTE_DATA_OPEN = 'ROOM_REMOTE_DATA_OPEN'
 
 let feeds = []
+let dataSupport = false
+
+export function setDataSupport(_dataSupport) {
+  dataSupport = !!_dataSupport
+}
 
 export function reset() {
   feeds = []
@@ -68,10 +77,11 @@ export function publishLocalFeed(audio, video) {
   return (dispatch, getState) => {
     const {feeds} = getState().videoRoom
     const videoRoomLocal = feeds.filter(feed => !feed.remote)[0].plugin
+
     // Publish our stream
     return new Promise((resolve, reject) => {
       videoRoomLocal.createOffer({
-        media: {audioRecv: false, videoRecv: false, audioSend: !!audio, videoSend: !!video, audio: audio, video: video},	// Publishers are sendonly
+        media: {audioRecv: false, videoRecv: false, audioSend: !!audio, videoSend: !!video, audio, video, data: dataSupport},	// Publishers are sendonly
         forced: true,
         success: (jsep) => {
           const publish = {request: 'configure', audio: !!audio, video: !!video}
@@ -91,17 +101,46 @@ export function publishLocalFeed(audio, video) {
             })
           }
         },
-        error: (error) => {
+        error: (message) => {
           // Webrtc error
           if (audio) {
             dispatch(publishLocalFeed(false, video));
           } else {
-            reject(error)
+            reject(message)
             dispatch({
               type: ROOM_LOCAL_FEED_ERROR,
-              message: error
+              message
             })
           }
+        }
+      })
+    })
+  }
+}
+
+export function sendData(data) {
+  data = data || null;
+
+  return (dispatch, getState) => {
+    const {feeds} = getState().videoRoom
+    const videoRoomLocal = feeds.filter(feed => !feed.remote)[0].plugin
+
+    return new Promise((resolve, reject) => {
+      videoRoomLocal.data({
+        text: JSON.stringify(data),
+        success: () => {
+          resolve()
+          dispatch({
+            type: ROOM_LOCAL_DATA,
+            data
+          })
+        },
+        error: (message) => {
+          reject(message)
+          dispatch({
+            type: ROOM_LOCAL_DATA_ERROR,
+            message
+          })
         }
       })
     })
@@ -176,7 +215,7 @@ function attachRemoteFeed(id, user) {
           feed.plugin.createAnswer({
             jsep: jsep,
             // We want recvonly audio/video
-            media: { audioSend: false, videoSend: false },
+            media: { audioSend: false, videoSend: false, data: dataSupport },
             success: (jsep) => {
               const body = { request: 'start', room: room.room }
               feed.plugin.send({message: body, jsep: jsep})
@@ -190,6 +229,17 @@ function attachRemoteFeed(id, user) {
             }
           })
         }
+      },
+      ondataopen: () => {
+        dispatch({
+          type: ROOM_REMOTE_DATA_OPEN
+        })
+      },
+      ondata: (data) => {
+        dispatch({
+          type: ROOM_REMOTE_DATA,
+          data: JSON.parse(data)
+        })
       },
       onlocalstream: (stream) => {
         // The subscriber stream is recvonly, we don't expect anything here
