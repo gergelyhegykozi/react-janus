@@ -1,6 +1,6 @@
 {
   "name": "react-janus",
-  "version": "0.0.26",
+  "version": "0.0.27",
   "description": "React - Redux based wrapper for Janus ",
   "main": "lib/index.js",
   "jsnext:main": "src/index.js",
@@ -21,8 +21,8 @@
     "react": "^0.14.0 || ^15.0.0",
     "react-dom": "^0.14.0 || ^15.0.0",
     "react-redux": "^4.0.0",
-    "redux": "^3.0  .4",
-    "redux-thunk": "^1.0.0",
+    "redux": "^3.0.4",
+    "redux-thunk": "^2.0.0",
     "webrtc-adapter-test": "^0.2.8"
   },
   "devDependencies": {
