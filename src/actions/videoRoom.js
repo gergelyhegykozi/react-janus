@@ -1,3 +1,5 @@
+import Janus from '../utils/janus'
+
 export const ATTACH_MCU_ERROR = 'ATTACH_MCU_ERROR'
 export const ROOM_EXISTS_ERROR = 'ROOM_EXISTS_ERROR'
 export const CREATE_ROOM_ERROR = 'CREATE_ROOM_ERROR'
@@ -18,6 +20,8 @@ export const ROOM_DATA_OPEN = 'ROOM_DATA_OPEN'
 
 let feeds = []
 let dataSupport = false
+let mypvtid = null
+let opaqueId = 'videoroom-' + Janus.randomString(12)
 
 export function setDataSupport(_dataSupport) {
   dataSupport = !!_dataSupport
@@ -36,9 +40,10 @@ function isRoomExists(dispatch, getState, videoRoomLocal) {
         room: room.room
       },
       success: (result) => {
-        if(result.exists === 'true') {
+        // Backward compatibility
+        if(result.exists && result.exists !== 'false') {
           resolve()   
-        } else if(result.exists === 'false') {
+        } else {
           reject()   
         }
       },
@@ -178,10 +183,11 @@ function attachRemoteFeed(id, user) {
     }
     janus.attach({
       plugin: "janus.plugin.videoroom",
+      opaqueId: opaqueId,
       success: (pluginHandle) => {
         feed.plugin = pluginHandle
         // We wait for the plugin to send us an offer
-        const listen = { request: 'join', room: room.room, ptype: 'listener', feed: feed.id }
+        const listen = { request: 'join', room: room.room, ptype: 'listener', feed: feed.id, private_id: mypvtid }
         feed.plugin.send({message: listen})
       },
       error: (error) => {
@@ -229,6 +235,9 @@ function attachRemoteFeed(id, user) {
             }
           })
         }
+      },
+      webrtcState: (on) => {
+        Janus.log("Janus says this WebRTC PeerConnection (feed #" + feed.user.id + ") is " + (on ? "up" : "down") + " now")
       },
       ondata: (data) => {
         dispatch({
@@ -279,6 +288,7 @@ export function attachLocalFeed(janus) {
     // Attach to video MCU test plugin
     janus.attach({
       plugin: "janus.plugin.videoroom",
+      opaqueId: opaqueId,
       success: (pluginHandle) => {
         feed.plugin = pluginHandle
         dispatch(join(feed.plugin))
@@ -290,6 +300,13 @@ export function attachLocalFeed(janus) {
         })
       },
       consentDialog: (on) => {
+        Janus.debug("Consent dialog should be " + (on ? "on" : "off") + " now")
+      },
+      mediaState: (medium, on) => {
+        Janus.log("Janus " + (on ? "started" : "stopped") + " receiving our " + medium)
+      },
+      webrtcState: (on) => {
+        Janus.log("Janus says our WebRTC PeerConnection is " + (on ? "up" : "down") + " now")
       },
       ondataopen: () => {
         dispatch({
@@ -300,13 +317,16 @@ export function attachLocalFeed(janus) {
         let event = msg.videoroom;
         if(event) {
           if(event === 'joined') {
-            const { publishers, id } = msg
+            const { publishers, id, private_id } = msg
+
+            mypvtid = private_id
+            feed.id = id
+            feeds.push(feed)
+              
             // Any new feed to attach to?
             if(publishers) {
               addRemoteFeed(publishers)
             }
-            feed.id = id
-            feeds.push(feed)
             dispatch({
               type: ROOM_LOCAL_FEED,
               feed,

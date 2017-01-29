@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import ReactDOM from 'react-dom'
+import { Janus } from 'react-janus'
 import { connect } from 'react-redux'
 
 //Material
@@ -45,7 +46,7 @@ class RemoteUser extends Component {
     if(feed && feed.stream) {
       const { stream } = feed
       const video = ReactDOM.findDOMNode(this).querySelector('video')
-      attachMediaStream(video, stream)
+      Janus.attachMediaStream(video, stream)
     }
   }
 

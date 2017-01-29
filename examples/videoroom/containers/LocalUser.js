@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import ReactDOM from 'react-dom'
+import { Janus } from 'react-janus'
 import { connect } from 'react-redux'
 
 //Material
@@ -58,7 +59,7 @@ class LocalUser extends Component {
     const { feed } = this.props
     if(feed && feed.stream) {
       const video = ReactDOM.findDOMNode(this).querySelector('video')
-      attachMediaStream(video, feed.stream)
+      Janus.attachMediaStream(video, feed.stream)
       video.muted = 'muted'
     }
   }

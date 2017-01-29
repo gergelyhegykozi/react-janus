@@ -39,7 +39,7 @@ export default class App extends Component {
       },
       publishers: 6,
       janus: {
-        server: 'http://localhost:8088/janus'
+        server: 'https://play.lingoda.dev:8889/janus'
       }
     }
   }
