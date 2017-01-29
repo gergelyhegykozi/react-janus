@@ -45,3 +45,5 @@ npm install react-janus --save
 
 # Reducers
 ## janusReducers
+# Janus
+[Janus api](https://janus.conf.meetecho.com/docs/JS.html)
