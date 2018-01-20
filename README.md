@@ -1,15 +1,18 @@
-# react-janus
+# react-redux-janus
 React - Redux based wrapper for Janus
+
 # Installation
 ```
-npm install react-janus --save
+yarn install react-redux-janus
 ```
+
 # Providers
 ## Mcu
 | Option | Type | Default | Description |
 | --- | ---| --- | --- |
 | reducers | array | `[]` | Additional reducers |
 | middlewares | array | `[]` | Additional middlewares |
+
 # Containers
 ## VideoRoom
 | Option | Type | Default | Description |
@@ -22,6 +25,7 @@ npm install react-janus --save
 | autoPublish | boolean | false | Publish the current stream after the initialization |
 | debug | boolean | false | Debug janus |
 | dataSupport | boolean | false | Data channel support |
+
 # Actions
 ## videoRoomActions
 #### publishLocalFeed(audio[boolean | audioConstraint], video[boolean | videoConstraint])
@@ -45,5 +49,6 @@ npm install react-janus --save
 
 # Reducers
 ## janusReducers
+
 # Janus
 [Janus api](https://janus.conf.meetecho.com/docs/JS.html)
