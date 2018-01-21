@@ -16,6 +16,7 @@ import {
 class VideoRoom extends Component {
 
   componentWillReceiveProps(nextProps) {
+    console.log('inside VIDEO ROOM PROPS', nextProps)
     const { dispatch } = nextProps
     //Attach local plugin
     if(nextProps.janusInstance !== this.props.janusInstance) {
@@ -24,7 +25,10 @@ class VideoRoom extends Component {
     //Join to the room
     if(nextProps.addedFeed !== this.props.addedFeed) {
       //Publish local feed
+      console.log('inside **2 VIDEO ROOM PROPS **2', nextProps.media, this.props.media)
+
       if(!nextProps.addedFeed.remote && !!nextProps.autoPublish) {
+        console.log('inside **2 VIDEO ROOM PROPS **2', 'IN IN')
         dispatch(publishLocalFeed(true, true))
       }
     }
@@ -59,6 +63,7 @@ class VideoRoom extends Component {
       dispatch,
       room,
       user,
+      media,
       janus,
       publishers,
       retry,
@@ -67,6 +72,7 @@ class VideoRoom extends Component {
     dispatch(createSession({
       room,
       user,
+      media,
       janus,
       publishers,
       retry,
@@ -96,11 +102,12 @@ class VideoRoom extends Component {
 VideoRoom.propTypes = {
   room: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
+  media: PropTypes.object,
   janus: PropTypes.object.isRequired,
   publishers: PropTypes.number.isRequired,
   retry: PropTypes.object,
   janusInstance: PropTypes.object,
-  addefFeed: PropTypes.object,
+  addedFeed: PropTypes.object,
   error: PropTypes.object,
   debug: PropTypes.bool,
   autoPublish: PropTypes.bool,
