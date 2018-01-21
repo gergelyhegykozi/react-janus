@@ -5,7 +5,6 @@ import {
 } from '../actions/mcu'
 
 function janusConfig(state = {}, action) {
-  console.log('MODULE -> reducers -> JANUS CONFIG', action);
   switch(action.type) {
     case CREATE_SESSION:
       const { config } = action
@@ -16,7 +15,6 @@ function janusConfig(state = {}, action) {
 }
 
 function mcu(state = {}, action) {
-  console.log('MODULE -> reducers -> MCU', action);
   switch(action.type) {
     case CREATE_SESSION_SUCCESS:
       const { janus } = action
