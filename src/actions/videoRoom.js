@@ -83,6 +83,9 @@ export function publishLocalFeed(audio, video) {
     const {feeds} = getState().videoRoom
     const videoRoomLocal = feeds.filter(feed => !feed.remote)[0].plugin
 
+    console.log('MODULE -> publishLocalFeed -> MODULE', feeds.filter(feed => !feed.remote)[0])
+    console.log('MODULE -> publishLocalFeed -> MODULE', videoRoomLocal)
+
     // Publish our stream
     return new Promise((resolve, reject) => {
       videoRoomLocal.createOffer({

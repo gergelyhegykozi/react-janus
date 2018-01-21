@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "build": "webpack -p -d --progress --colors",
-    "dev": "webpack-dev-server"
+    "dev": "webpack-dev-server  --port 9999"
   },
   "author": "",
   "license": "MIT",
