@@ -63,7 +63,7 @@ function createRoom(dispatch, getState, videoRoomLocal) {
   console.log('MODULE -> create room-> FEED', getState().janusConfig)
   console.log('MODULE -> create room -> VIDEOROOMLOCAL', videoRoomLocal)
 
-    return new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     videoRoomLocal.send({
       message: Object.assign(room, {
         publishers
