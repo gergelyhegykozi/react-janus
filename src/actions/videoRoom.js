@@ -59,7 +59,11 @@ function isRoomExists(dispatch, getState, videoRoomLocal) {
 
 function createRoom(dispatch, getState, videoRoomLocal) {
   const { room, publishers } = getState().janusConfig
-  return new Promise((resolve, reject) => {
+
+  console.log('MODULE -> create room-> FEED', getState().janusConfig)
+  console.log('MODULE -> create room -> VIDEOROOMLOCAL', videoRoomLocal)
+
+    return new Promise((resolve, reject) => {
     videoRoomLocal.send({
       message: Object.assign(room, {
         publishers
@@ -84,8 +88,8 @@ export function publishLocalFeed(audio, video) {
     const videoRoomLocal = feeds.filter(feed => !feed.remote)[0].plugin
 
 
-    console.log('MODULE -> publishLocalFeed -> MODULE', feeds.filter(feed => !feed.remote)[0])
-    console.log('MODULE -> publishLocalFeed -> MODULE', videoRoomLocal)
+    console.log('MODULE -> publishLocalFeed -> FEED', feeds.filter(feed => !feed.remote)[0])
+    console.log('MODULE -> publishLocalFeed -> VIDEOROOMLOCAL', videoRoomLocal)
 
     // Publish our stream
     return new Promise((resolve, reject) => {

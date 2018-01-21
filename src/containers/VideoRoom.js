@@ -25,7 +25,7 @@ class VideoRoom extends Component {
     //Join to the room
     if(nextProps.addedFeed !== this.props.addedFeed) {
       //Publish local feed
-      console.log('inside **2 VIDEO ROOM PROPS **2', nextProps.media, this.props.media)
+      console.log('inside **2 VIDEO ROOM PROPS **2', nextProps, this.props)
 
       if(!nextProps.addedFeed.remote && !!nextProps.autoPublish) {
         console.log('inside **2 VIDEO ROOM PROPS **2', 'IN IN')
@@ -59,6 +59,7 @@ class VideoRoom extends Component {
   }
 
   initMcu() {
+    console.log('MODULE init mcu', this.props)
     const {
       dispatch,
       room,
@@ -115,6 +116,7 @@ VideoRoom.propTypes = {
 }
 
 function selector(state) {
+  console.log('MODULE... inside SELECTOR', state, )
   const {
     janus: janusInstance
   } = state.mcu
