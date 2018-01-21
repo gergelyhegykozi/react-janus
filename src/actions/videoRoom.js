@@ -161,7 +161,9 @@ export function sendData(data) {
 }
 
 function join(videoRoomLocal) {
+    console.log('MODULE -> JOIN before in', videoRoomLocal);
   return (dispatch, getState) => {
+    console.log('MODULE -> JOIN in ', getState(), getState.janusConfig);
     const { room, user } = getState().janusConfig
     const joinToRoom = () => {
       const data = { request: 'join', room: room.room, ptype: 'publisher', display: JSON.stringify(user) }
