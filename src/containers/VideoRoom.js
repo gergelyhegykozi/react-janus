@@ -88,7 +88,9 @@ class VideoRoom extends Component {
   }
 
   componentWillUnmount() {
-    this.props.janusInstance.destroy();
+    if (this.props.janusInstance) {
+      this.props.janusInstance.destroy();
+    }
   }
 
   render() {
