@@ -2758,6 +2758,12 @@ ripemd160@0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/ripemd160/-/ripemd160-0.2.0.tgz#2bf198bde167cacfa51c0a928e84b68bbe171fce"
 
+rtcpeerconnection-shim@^1.2.9:
+  version "1.2.10"
+  resolved "https://registry.yarnpkg.com/rtcpeerconnection-shim/-/rtcpeerconnection-shim-1.2.10.tgz#11beb590383405f398e74e38e3618eca3b9254b3"
+  dependencies:
+    sdp "^2.6.0"
+
 safe-buffer@5.1.1, safe-buffer@^5.0.1, safe-buffer@^5.1.1, safe-buffer@~5.1.0, safe-buffer@~5.1.1:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.1.1.tgz#893312af69b2123def71f57889001671eeb2c853"
@@ -2766,9 +2772,9 @@ sax@^1.1.4:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
 
-sdp@^1.5.0:
-  version "1.5.4"
-  resolved "https://registry.yarnpkg.com/sdp/-/sdp-1.5.4.tgz#8e038f6ddb14bd765ae1f4b5216e12094511e0d0"
+sdp@^2.6.0, sdp@^2.7.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/sdp/-/sdp-2.7.0.tgz#02b64ea0c29d73179afa19794e466b123b1b29f3"
 
 semver@^5.3.0:
   version "5.5.0"
@@ -3321,11 +3327,12 @@ webpack@~1.12.2:
     watchpack "^0.2.1"
     webpack-core "~0.6.0"
 
-webrtc-adapter@^3.1.0:
-  version "3.4.3"
-  resolved "https://registry.yarnpkg.com/webrtc-adapter/-/webrtc-adapter-3.4.3.tgz#b636062eee9a6ef158acd0d8501b678434b56f16"
+webrtc-adapter@^6.1.4:
+  version "6.1.4"
+  resolved "https://registry.yarnpkg.com/webrtc-adapter/-/webrtc-adapter-6.1.4.tgz#6fb13589fd29c1a1061b80cf86f6f2b1a0c45431"
   dependencies:
-    sdp "^1.5.0"
+    rtcpeerconnection-shim "^1.2.9"
+    sdp "^2.7.0"
 
 whatwg-fetch@>=0.10.0:
   version "2.0.3"

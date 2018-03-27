@@ -4,6 +4,9 @@
   "description": "React - Redux based wrapper for Janus, enahanced and based on the original (old) fork",
   "main": "lib/index.js",
   "jsnext:main": "src/index.js",
+  "babel" : {
+    "compact": true
+  },
   "files": [
     "dist",
     "lib",
@@ -24,7 +27,7 @@
     "react-redux": "^4.0.0 || ^5.0.0",
     "redux": "^3.0.4",
     "redux-thunk": "^2.0.0",
-    "webrtc-adapter": "^3.1.0"
+    "webrtc-adapter": "^6.1.4"
   },
   "devDependencies": {
     "babel": "^5.8.23",
