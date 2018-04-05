@@ -1684,6 +1684,21 @@ function Janus(gatewayCallbacks) {
                         height = 480;
                         maxHeight = 480;
                         width  = 640;
+                    } else if(media.video === 'stdres-portrait') {
+                        // Normal resolution, 3:4
+                        height = 640;
+                        maxHeight = 640;
+                        width  = 480;
+                    } else if(media.video === 'iphone-stdres') {
+                        // iphone resolution, almost 9:16
+                        height = 1136;
+                        maxHeight = 1136;
+                        width  = 640;
+                    } else if(media.video === 'iphone-hires') {
+                        // iphone8 resolution, almost 9:16
+                        height = 1334;
+                        maxHeight = 1334;
+                        width  = 750;
                     } else if(media.video === 'stdres-16:9') {
                         // Normal resolution, 16:9
                         height = 360;
