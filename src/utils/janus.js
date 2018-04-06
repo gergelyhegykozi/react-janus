@@ -1684,6 +1684,16 @@ function Janus(gatewayCallbacks) {
                         height = 480;
                         maxHeight = 480;
                         width  = 640;
+                    } else if(media.video === 'stdres-square') {
+                        // Normal resolution, 3:4
+                        height = 480;
+                        maxHeight = 480;
+                        width  = 480;
+                    } else if(media.video === 'hires-square') {
+                        // Normal resolution, 3:4
+                        height = 720;
+                        maxHeight = 720;
+                        width  = 720;
                     } else if(media.video === 'stdres-portrait') {
                         // Normal resolution, 3:4
                         height = 640;
