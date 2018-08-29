@@ -1699,6 +1699,16 @@ function Janus(gatewayCallbacks) {
                         height = 640;
                         maxHeight = 640;
                         width  = 480;
+                    } else if(media.video === 'instagram-portrait') {
+                        // Normal resolution
+                        height = 600;
+                        maxHeight = 600;
+                        width  = 480;
+                    } else if(media.video === 'hires-portrait') {
+                        // Almost High resolution, 9:16
+                        height = 853;
+                        maxHeight = 853;
+                        width  = 480;
                     } else if(media.video === 'iphone-stdres') {
                         // iphone resolution, almost 9:16
                         height = 1136;
