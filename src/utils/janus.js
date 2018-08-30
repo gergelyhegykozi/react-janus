@@ -1695,15 +1695,15 @@ function Janus(gatewayCallbacks) {
                         maxHeight = 720;
                         width  = 720;
                     } else if(media.video === 'stdres-portrait') {
-                        // Normal resolution, 3:4
-                        height = 640;
-                        maxHeight = 640;
-                        width  = 480;
+                        // Normal resolution, 9:16
+                        height = 704;
+                        maxHeight = 704;
+                        width  = 396;
                     } else if(media.video === 'instagram-portrait') {
                         // Normal resolution
-                        height = 600;
-                        maxHeight = 600;
-                        width  = 480;
+                        height = 896;
+                        maxHeight = 896;
+                        width  = 504;
                     } else if(media.video === 'hires-portrait') {
                         // Almost High resolution, 9:16
                         height = 853;
