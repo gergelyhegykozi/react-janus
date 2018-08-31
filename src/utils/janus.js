@@ -1694,31 +1694,29 @@ function Janus(gatewayCallbacks) {
                         height = 720;
                         maxHeight = 720;
                         width  = 720;
-                    } else if(media.video === 'stdres-portrait') {
+                    } else if(media.video === 'ios-res') {
                         // Normal resolution, 9:16
-                        height = 704;
-                        maxHeight = 704;
-                        width  = 396;
-                    } else if(media.video === 'instagram-portrait') {
-                        // Normal resolution
-                        height = 896;
-                        maxHeight = 896;
-                        width  = 504;
-                    } else if(media.video === 'hires-portrait') {
-                        // Almost High resolution, 9:16
-                        height = 853;
-                        maxHeight = 853;
-                        width  = 480;
-                    } else if(media.video === 'iphone-stdres') {
-                        // iphone resolution, almost 9:16
-                        height = 1136;
-                        maxHeight = 1136;
+                        height = 480;
+                        maxHeight = 480;
                         width  = 640;
-                    } else if(media.video === 'iphone-hires') {
-                        // iphone8 resolution, almost 9:16
-                        height = 1334;
-                        maxHeight = 1334;
-                        width  = 750;
+                    } else if(media.video === 'android-stdres') {
+                        // Normal resolution
+                        height = 396;
+                        maxHeight = 396;
+                        width  = 704;
+                    } else if(media.video === 'android-hires') {
+                        // Normal resolution
+                        height = 504;
+                        maxHeight = 504;
+                        width  = 896;
+                    } else if(media.video === 'windows-res') {
+                        height = 480;
+                        maxHeight = 480;
+                        width  = 853;
+                    } else if(media.video === 'mac-res') {
+                        height = 480;
+                        maxHeight = 480;
+                        width  = 853;
                     } else if(media.video === 'stdres-16:9') {
                         // Normal resolution, 16:9
                         height = 360;
