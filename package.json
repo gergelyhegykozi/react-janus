@@ -4,7 +4,7 @@
   "description": "React - Redux based wrapper for Janus, enahanced and based on the original (old) fork",
   "main": "lib/index.js",
   "jsnext:main": "src/index.js",
-  "babel" : {
+  "babel": {
     "compact": true
   },
   "files": [
