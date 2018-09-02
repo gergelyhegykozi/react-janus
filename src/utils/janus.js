@@ -3153,3 +3153,5 @@ function Janus(gatewayCallbacks) {
 		return (trickle === true);
 	}
 };
+
+export default Janus
