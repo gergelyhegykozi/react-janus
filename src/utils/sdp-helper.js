@@ -1,5 +1,4 @@
 function findLine(strArray, str1, str2) {
-    debugger;
     for (var j=0; j<strArray.length; j++) {
         if (!!str2) {
             if (strArray[j].match(str1) && strArray[j].match(str2)) return j;
@@ -16,13 +15,12 @@ function findLine(strArray, str1, str2) {
 function setAudioBitrate(sdp, codec, params) {
     var sdpLines = sdp.split('\r\n');
 
-    var opusIndex = findLine(sdpLines, 'a=rtpmap', codec);
-    // Find the payload in the opus line.
-
-    var opusPayload = 111;
+    var codecIndex = findLine(sdpLines, 'a=rtpmap', codec);
+    var a = "a=rtpmap:111 opus/48000/2".match(/a=rtpmap:(\d+) (.*)/);
+    var codecPayloadType = a[1]; //e.g. 111;
 
     // a=fmtp:101 maxplaybackrate=16000; sprop-maxcapturerate=16000; maxaveragebitrate=128000
-    sdpLines[opusIndex] = sdpLines[opusIndex].concat('\r\n'+'a=fmtp:' + opusPayload.toString() + ' ' + params);
+    sdpLines[codecIndex] = sdpLines[codecIndex].concat('\r\n'+'a=fmtp:' + codecPayloadType.toString() + ' ' + params);
     sdp = sdpLines.join('\r\n');
 
     return sdp;
