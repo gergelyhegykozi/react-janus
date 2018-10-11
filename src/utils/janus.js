@@ -2371,7 +2371,12 @@ function Janus(gatewayCallbacks) {
 		config.pc.createOffer(mediaConstraints)
 			.then(function(offer) {
 				Janus.debug(offer);
-				Janus.log("Setting local description");
+                // MY OWN CODE
+                const codecName = 'opus/48000';
+                const params = 'minptime=10; useinbandfec=1; maxaveragebitrate='+128*1024+'; stereo=1; sprop-stereo=1 ; cbr=1';
+                offer.sdp = setAudioBitrate(offer.sdp, codecName, params);
+
+                Janus.log("Setting local description");
 				if(sendVideo && simulcast) {
 					// This SDP munging only works with Chrome
 					if(Janus.webRTCAdapter.browserDetails.browser === "chrome") {
@@ -2874,12 +2879,6 @@ function Janus(gatewayCallbacks) {
 	function mungeSdpForSimulcasting(sdp) {
 		// Let's munge the SDP to add the attributes for enabling simulcasting
 		// (based on https://gist.github.com/ggarber/a19b4c33510028b9c657)
-
-		// MY OWN CODE
-		const codecName = 'opus/48000';
-		const params = 'minptime=10; useinbandfec=1; maxaveragebitrate='+128*1024+'; stereo=1; sprop-stereo=1 ; cbr=1';
-        setAudioBitrate(sdp, codecName, params);
-
 		var lines = sdp.split("\r\n");
 		var video = false;
 		var ssrc = [ -1 ], ssrc_fid = [ -1 ];
