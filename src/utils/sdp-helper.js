@@ -16,6 +16,8 @@ function setAudioBitrate(sdp, codec, params) {
     var sdpLines = sdp.split('\r\n');
 
     var codecIndex = findLine(sdpLines, 'a=rtpmap', codec);
+    if (codecIndex === -1) return sdp;
+
     var a = "a=rtpmap:111 opus/48000/2".match(/a=rtpmap:(\d+) (.*)/);
     var codecPayloadType = a[1]; //e.g. 111;
 
