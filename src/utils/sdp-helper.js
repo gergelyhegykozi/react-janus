@@ -18,8 +18,9 @@ function setAudioBitrate(sdp, codec, params) {
     var codecIndex = findLine(sdpLines, 'a=rtpmap', codec);
     if (codecIndex === -1) return sdp;
 
-    var a = "a=rtpmap:111 opus/48000/2".match(/a=rtpmap:(\d+) (.*)/);
-    var codecPayloadType = a[1]; //e.g. 111;
+    var rtpmapLine = sdpLines[codecIndex];
+    var extractPayloadRegEx = rtpmapLine.match(/a=rtpmap:(\d+) (.*)/); // "a=rtpmap:111 opus/48000/2".match(/a=rtpmap:(\d+) (.*)/);
+    var codecPayloadType = extractPayloadRegEx[1]; //e.g. 111;
 
     // a=fmtp:101 maxplaybackrate=16000; sprop-maxcapturerate=16000; maxaveragebitrate=128000
     sdpLines[codecIndex] = sdpLines[codecIndex].concat('\r\n'+'a=fmtp:' + codecPayloadType.toString() + ' ' + params);
