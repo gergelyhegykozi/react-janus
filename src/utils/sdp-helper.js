@@ -22,10 +22,20 @@ function setAudioBitrate(sdp, codec, params) {
     var extractPayloadRegEx = rtpmapLine.match(/a=rtpmap:(\d+) (.*)/); // "a=rtpmap:111 opus/48000/2".match(/a=rtpmap:(\d+) (.*)/);
     var codecPayloadType = extractPayloadRegEx[1]; //e.g. 111;
 
-    // a=fmtp:101 maxplaybackrate=16000; sprop-maxcapturerate=16000; maxaveragebitrate=128000
-    sdpLines[codecIndex] = sdpLines[codecIndex].concat('\r\n'+'a=fmtp:' + codecPayloadType.toString() + ' ' + params);
-    sdp = sdpLines.join('\r\n');
+    var fmtpLineIndex = findLine(sdpLines, `a=fmtp:`, codecPayloadType);
+    var fmtpNewLineValue = 'a=fmtp:' + codecPayloadType.toString() + ' ' + params;
+    if (fmtpLineIndex === -1) {
+        // no fmtp line, we can insert a new one easily and freely
+        // a=fmtp:101 maxplaybackrate=16000; sprop-maxcapturerate=16000; maxaveragebitrate=128000
+        sdpLines[codecIndex] = sdpLines[codecIndex].concat('\r\n' + fmtpNewLineValue);
+    } else {
+        // the line already exists with somet   hing like this: a=fmtp:111 minptime=10;useinbandfec=1
+        // we need to concat with this -->
+        // a=fmtp:101 maxplaybackrate=16000; sprop-maxcapturerate=16000; maxaveragebitrate=128000
+        sdpLines[fmtpLineIndex] = fmtpNewLineValue;
+    }
 
+    sdp = sdpLines.join('\r\n');
     return sdp;
 }
 

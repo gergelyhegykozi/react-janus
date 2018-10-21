@@ -2373,7 +2373,7 @@ function Janus(gatewayCallbacks) {
 				Janus.debug(offer);
                 // MY OWN CODE
                 const codecName = 'opus/48000';
-                const params = 'minptime=10; useinbandfec=1; maxaveragebitrate='+128*1024+'; stereo=1; sprop-stereo=1 ; cbr=1';
+                const params = 'minptime=10;useinbandfec=1;maxaveragebitrate='+128*1024+';stereo=1;sprop-stereo=1;cbr=1';
                 offer.sdp = setAudioBitrate(offer.sdp, codecName, params);
 
                 Janus.log("Setting local description");
