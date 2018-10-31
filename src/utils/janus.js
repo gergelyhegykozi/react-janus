@@ -1991,8 +1991,8 @@ function Janus(gatewayCallbacks) {
 						}
 						Janus.log("Adding media constraint:", media.video);
 						videoSupport = {
-							'height': {'ideal': height},
-							'width':  {'ideal': width}
+							'height': {'exact': height},
+							'width':  {'exact': width}
 						};
 						Janus.log("Adding video constraint:", videoSupport);
 					}
