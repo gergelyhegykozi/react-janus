@@ -39,4 +39,11 @@ function setAudioBitrate(sdp, codec, params) {
     return sdp;
 }
 
-export {setAudioBitrate};
+function setMaxAudioBitrate(sdp) {
+    let codecName = 'opus/48000';
+    let params = 'maxaveragebitrate=' + (128 * 1024) + ';stereo=1;sprop-stereo=1;cbr=1;x-google-min-bitrate=128;x-google-max-bitrate=128;';
+    sdp = setAudioBitrate(sdp, codecName, params);
+    return sdp;
+}
+
+export {setMaxAudioBitrate};

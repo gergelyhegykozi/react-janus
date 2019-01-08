@@ -22,7 +22,7 @@
 	OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {setAudioBitrate} from "./sdp-helper";
+import {SetMaxAudioBitrate} from "./sdp-helper";
 
 
 // List of sessions
@@ -2212,7 +2212,12 @@ function Janus(gatewayCallbacks) {
 				callbacks.error("No PeerConnection: if this is an answer, use createAnswer and not handleRemoteJsep");
 				return;
 			}
-			config.pc.setRemoteDescription(jsep)
+
+            // MY OWN CODE
+            // MUNGING SDP
+            jsep.sdp  = setMaxAudioBitrate(jsep.sdp);
+
+            config.pc.setRemoteDescription(jsep)
 				.then(function() {
 					Janus.log("Remote description accepted!");
 					config.remoteSdp = jsep.sdp;
@@ -2371,11 +2376,6 @@ function Janus(gatewayCallbacks) {
 		config.pc.createOffer(mediaConstraints)
 			.then(function(offer) {
 				Janus.debug(offer);
-                // MY OWN CODE
-                const codecName = 'opus/48000';
-                const params = 'minptime=10;useinbandfec=1;maxaveragebitrate='+128*1024+';stereo=1;sprop-stereo=1;cbr=1';
-                offer.sdp = setAudioBitrate(offer.sdp, codecName, params);
-
                 Janus.log("Setting local description");
 				if(sendVideo && simulcast) {
 					// This SDP munging only works with Chrome
@@ -2386,7 +2386,12 @@ function Janus(gatewayCallbacks) {
 						Janus.warn("simulcast=true, but this is not Chrome nor Firefox, ignoring");
 					}
 				}
-				config.mySdp = offer.sdp;
+
+                // MY OWN CODE
+                // MUNGING SDP
+                offer.sdp = setMaxAudioBitrate(offer.sdp);
+
+                config.mySdp = offer.sdp;
 				config.pc.setLocalDescription(offer)
 					.catch(callbacks.error);
 				config.mediaConstraints = mediaConstraints;
