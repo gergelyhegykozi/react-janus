@@ -22,8 +22,9 @@
 	OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {SetMaxAudioBitrate} from "./sdp-helper";
-
+// MY_CODE: IMPORTS
+import {setMaxAudioBitrate} from "./sdp-helper";
+import {addStereoAudioSupport} from "./gum-helper";
 
 // List of sessions
 Janus.sessions = {};
@@ -1905,11 +1906,12 @@ function Janus(gatewayCallbacks) {
 			pluginHandle.consentDialog(true);
 			var audioSupport = isAudioSendEnabled(media);
 			if(audioSupport === true && media != undefined && media != null) {
-				if(typeof media.audio === 'object') {
-					audioSupport = media.audio;
-				}
+				// MY_CODE: AUDIO EDITING
+				audioSupport = addStereoAudioSupport(media.audio);
 			}
 			var videoSupport = isVideoSendEnabled(media);
+
+			// MY_CODE: VIDEO DEFAULTS
 			if(videoSupport === true && media != undefined && media != null) {
 				var simulcast = callbacks.simulcast === true ? true : false;
 				if(simulcast && !jsep && (media.video === undefined || media.video === false))
@@ -2173,7 +2175,7 @@ function Janus(gatewayCallbacks) {
 						}
 					}
 
-					var gumConstraints = {
+                    var gumConstraints = {
 						audio: audioExist ? audioSupport : false,
 						video: videoExist ? videoSupport : false
 					};
@@ -2213,8 +2215,8 @@ function Janus(gatewayCallbacks) {
 				return;
 			}
 
-            // MY OWN CODE
-            // MUNGING SDP
+
+            // My_Code: MUNGING SDP
             jsep.sdp  = setMaxAudioBitrate(jsep.sdp);
 
             config.pc.setRemoteDescription(jsep)
@@ -2387,8 +2389,8 @@ function Janus(gatewayCallbacks) {
 					}
 				}
 
-                // MY OWN CODE
-                // MUNGING SDP
+
+                // MY_CODE: MUNGING SDP
                 offer.sdp = setMaxAudioBitrate(offer.sdp);
 
                 config.mySdp = offer.sdp;
