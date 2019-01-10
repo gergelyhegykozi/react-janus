@@ -1,6 +1,6 @@
 function addStereoAudioSupport(mediaAudio) {
     let audioSupport;
-    let stereoAudioSupport = { channelCount:{exact: 2}, echoCancellation:false, autoGainControl:false, noiseSuppression:false };
+    let stereoAudioSupport = { channelCount:2, echoCancellation:false, autoGainControl:false, noiseSuppression:false };
     if(typeof mediaAudio === 'object') {
         audioSupport = Object.assign( {}, mediaAudio, stereoAudioSupport)
     }
