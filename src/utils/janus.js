@@ -2241,12 +2241,15 @@ function Janus(gatewayCallbacks) {
                         }
                     }
 
+                    var emptyGumConstraints = {};
                     var gumConstraints = {
                         audio: (audioExist && !media.keepAudio) ? audioSupport : false,
                         video: (videoExist && !media.keepVideo) ? videoSupport : false
                     };
                     Janus.debug("getUserMedia constraints", gumConstraints);
-                    navigator.mediaDevices.getUserMedia(gumConstraints)
+                    Janus.debug("getUserMedia (empty) constraints", emptyGumConstraints);
+
+                    navigator.mediaDevices.getUserMedia(emptyGumConstraints)
                         .then(function(stream) {
                             pluginHandle.consentDialog(false);
                             streamsDone(handleId, jsep, media, callbacks, stream);
