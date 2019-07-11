@@ -2241,7 +2241,7 @@ function Janus(gatewayCallbacks) {
                         }
                     }
 
-                    var emptyGumConstraints = {};
+                    var emptyGumConstraints = {audio: true, video: true};
                     var gumConstraints = {
                         audio: (audioExist && !media.keepAudio) ? audioSupport : false,
                         video: (videoExist && !media.keepVideo) ? videoSupport : false
