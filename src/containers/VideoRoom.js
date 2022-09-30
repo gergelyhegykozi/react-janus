@@ -124,6 +124,7 @@ function selector(state) {
   const {
     addedFeed
   } = state.videoRoom
+  const { media, ...janusConfig } = state.janusConfig
   const error = state.mcu.error || state.videoRoom.error || null
   return Object.assign({
     janusInstance,
@@ -132,7 +133,7 @@ function selector(state) {
       countdown: 5000
     },
     error
-  }, state.janusConfig)
+  }, janusConfig)
 }
 
 export default connect(selector)(VideoRoom)
