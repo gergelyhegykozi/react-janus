@@ -2301,11 +2301,11 @@ function Janus(gatewayCallbacks) {
 			pluginHandle.consentDialog(true);
 			var audioSupport = isAudioSendEnabled(media);
 			if(audioSupport && media && typeof media.audio === 'object') {
-                // MY_CODE: AUDIO EDITING
+                		// MY_CODE: AUDIO EDITING
 				audioSupport = addStereoAudioSupport(media.audio);
-            }
+            		}
+			// MY_CODE: VIDEO DEFAULTS
 			var videoSupport = isVideoSendEnabled(media);
-            // MY_CODE VIDEO DEFAULTS
 			if(videoSupport && media) {
 				var simulcast = (callbacks.simulcast === true || callbacks.simulcast2 === true);
 				var svc = callbacks.svc;
