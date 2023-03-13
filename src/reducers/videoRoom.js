@@ -12,7 +12,8 @@ import {
   ROOM_LOCAL_FEED_ERROR,
   ROOM_REMOTE_FEED_ERROR,
   ROOM_ICE_ERROR,
-  ROOM_LOCAL_DATA_ERROR
+  ROOM_LOCAL_DATA_ERROR,
+  ROOM_LOCAL_TRACK
 } from '../actions/videoRoom'
 
 function videoRoom(state = {
@@ -33,6 +34,13 @@ function videoRoom(state = {
         streamFeed: feed,
         feeds
       })
+    case ROOM_LOCAL_TRACK: {
+      var {feeds} = action
+
+      return Object.assign({}, state, {
+        feeds
+      })
+    }
     case ROOM_REMOVE_FEED:
       var { feed, feeds } = action
       return Object.assign({}, state, {

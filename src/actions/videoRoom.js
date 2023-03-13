@@ -6,10 +6,12 @@ export const CREATE_ROOM_ERROR = 'CREATE_ROOM_ERROR'
 export const AUDIO_DISABLED = 'AUDIO_DISABLED'
 export const ROOM_LOCAL_FEED = 'ROOM_LOCAL_FEED'
 export const ROOM_LOCAL_FEED_ERROR = 'ROOM_LOCAL_FEED_ERROR'
-export const ROOM_LOCAL_STREAM = 'ROOM_LOCAL_STREAM'
 export const ROOM_REMOTE_FEED = 'ROOM_REMOTE_FEED'
 export const ROOM_REMOTE_FEED_ERROR = 'ROOM_REMOTE_FEED_ERROR'
+export const ROOM_LOCAL_STREAM = 'ROOM_LOCAL_STREAM'
 export const ROOM_REMOTE_STREAM = 'ROOM_REMOTE_STREAM'
+export const ROOM_REMOTE_TRACK = 'ROOM_REMOTE_TRACK'
+export const ROOM_LOCAL_TRACK = 'ROOM_LOCAL_TRACK'
 export const ROOM_REMOVE_FEED = 'ROOM_REMOVE_FEED'
 export const ROOM_DESTROYED = 'ROOM_DESTROYED'
 export const ROOM_ICE_ERROR = 'ROOM_ICE_ERROR'
@@ -94,8 +96,11 @@ export function publishLocalFeed(audio, video) {
     // Publish our stream
     return new Promise((resolve, reject) => {
       videoRoomLocal.createOffer({
-        media: {audioRecv: false, videoRecv: false, audioSend: !!audio, videoSend: !!video, audio, video, data: dataSupport},	// Publishers are sendonly
-        forced: true,
+        tracks: [
+          { type: 'audio', capture: audio, recv: true },
+          { type: 'video', capture: video, recv: true },
+          { type: 'data', capture: dataSupport }
+        ],
         success: (jsep) => {
           const publish = {request: 'configure', audio: !!audio, video: !!video}
           videoRoomLocal.send({
@@ -273,6 +278,10 @@ function attachRemoteFeed(id, user) {
           }
         })
       },
+      onlocaltrack: () => {},
+      onremotetrack: (track, mid, on, metadata) => {
+        console.log(track, mid, on, metadata)
+      },
       oncleanup: () => {
       }
     });
@@ -291,7 +300,8 @@ export function attachLocalFeed(janus) {
     }
     let feed = {
       user,
-      remote: false
+      remote: false,
+      localTracks: [],
     }
 
     // Attach to video MCU test plugin
@@ -375,16 +385,16 @@ export function attachLocalFeed(janus) {
           feed.plugin.handleRemoteJsep({jsep: jsep})
         }
       },
-      onlocalstream: (stream) => {
-        //Local video / audio
+      onlocaltrack: (track, added) => {
         const index = feeds.indexOf(feed);
-        feed = Object.assign({}, feed, {
-            stream
-        })
+        if(added) {
+          feed.localTracks = [...feed.localTracks, track]
+        } else {
+          feed.localTracks.filter(localTrack => localTrack.id !== track.id)
+        }
         feeds[index] = feed;
         dispatch({
-          type: ROOM_LOCAL_STREAM,
-          feed,
+          type: ROOM_LOCAL_TRACK,
           feeds: feeds.slice(0)
         })
         //Ice state checker
